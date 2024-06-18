@@ -14,7 +14,9 @@ struct Playback: View {
     @State private var animateGradient = false
     
     private let player = SystemMusicPlayer.shared
-        
+    
+    private let authorization = Authorization()
+    
     /// `true` when the player is playing.
     var isPlaying: Bool {
         return (playerState.playbackStatus == .playing)
@@ -43,6 +45,17 @@ struct Playback: View {
             }
             
             VStack(spacing: 0) {
+                if isPlaying {
+                    LottieView(loopMode: .loop)
+                        .padding(.top, 140)
+                        .padding(.leading, 200)
+                        .frame(width: 10, height: 10)
+                } else {
+                    Rectangle()
+                        .frame(width: 10, height: 10)
+                        .opacity(0)
+                }
+                
                 Button {
                     handlePlayButtonSelected()
                 } label: {
