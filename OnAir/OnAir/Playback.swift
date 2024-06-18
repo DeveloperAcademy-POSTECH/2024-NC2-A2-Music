@@ -11,25 +11,49 @@ import SwiftUI
 struct Playback: View {
     @ObservedObject private var playerState = SystemMusicPlayer.shared.state
     
+    @State private var animateGradient = false
+    
     private let player = SystemMusicPlayer.shared
     
-    let authorization = Authorization()
+    private let authorization = Authorization()
     
     /// `true` when the player is playing.
     var isPlaying: Bool {
         return (playerState.playbackStatus == .playing)
     }
     
+    private var backGradient: LinearGradient {
+        LinearGradient(colors: [.backRed, .backYellow, .backPurple], startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+    
     var body: some View {
         ZStack {
-            Color(.yellowBackground)
-                .ignoresSafeArea()
+            if isPlaying {
+                backGradient
+                    .edgesIgnoringSafeArea(.all)
+                    .hueRotation(.degrees(animateGradient ? 45 : 0))
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: true)) {
+                            animateGradient.toggle()
+                        }
+                    }
+                
+            } else {
+                backGradient
+                    .edgesIgnoringSafeArea(.all)
+                    .hueRotation(.degrees(animateGradient ? 45 : 0))
+            }
             
             VStack(spacing: 0) {
-                Button {
-                    authorization.fetchMusicAuthorizationStatus()
-                } label: {
-                    Text("권한 받기")
+                if isPlaying {
+                    LottieView(loopMode: .loop)
+                        .padding(.top, 140)
+                        .padding(.leading, 200)
+                        .frame(width: 10, height: 10)
+                } else {
+                    Rectangle()
+                        .frame(width: 10, height: 10)
+                        .opacity(0)
                 }
                 
                 Button {
@@ -38,8 +62,8 @@ struct Playback: View {
                     Image("radio")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 300)
-                        .padding(.top, 50)
+                        .frame(width: 260)
+                        .padding(.top, 80)
                 }
             }
         }
