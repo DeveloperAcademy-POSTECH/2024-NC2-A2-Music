@@ -19,7 +19,7 @@ final class Authorization: ObservableObject {
         return musicAuthorizationStatus
     }
     
-    private func fetchMusicAuthorizationStatus() {
+    func fetchMusicAuthorizationStatus() {
         switch musicAuthorizationStatus {
         case .notDetermined:
             Task {

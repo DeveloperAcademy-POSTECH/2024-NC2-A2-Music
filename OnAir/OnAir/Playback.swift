@@ -10,7 +10,7 @@ import SwiftUI
 
 struct Playback: View {
     @ObservedObject private var playerState = SystemMusicPlayer.shared.state
-
+    
     private let player = SystemMusicPlayer.shared
     
     let authorization = Authorization()
@@ -19,24 +19,20 @@ struct Playback: View {
     var isPlaying: Bool {
         return (playerState.playbackStatus == .playing)
     }
-
+    
     var body: some View {
         ZStack {
             Color(.yellowBackground)
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                if authorization.readMusicAuthorizationStatus() != .authorized {
-                    Button {
-                        authorization.readMusicAuthorizationStatus()
-                    } label: {
-                        Text("권한 받기")
-                    }
+                Button {
+                    authorization.fetchMusicAuthorizationStatus()
+                } label: {
+                    Text("권한 받기")
                 }
-                                
                 
                 Button {
-                    
                     handlePlayButtonSelected()
                 } label: {
                     Image("radio")
@@ -64,7 +60,6 @@ struct Playback: View {
             player.pause()
         }
     }
-
 }
 
 #Preview {
